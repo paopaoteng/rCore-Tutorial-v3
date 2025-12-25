@@ -14,6 +14,116 @@ Official QQ group number: 735045051
 
 This project aims to show how to write an **Unix-like OS** running on **RISC-V** platforms **from scratch** in **[Rust](https://www.rust-lang.org/)** for **beginners** without any background knowledge about **computer architectures, assembly languages or operating systems**.
 
+## Directory Structure
+
+```
+rCore-Tutorial-v3/
+├── bootloader/                  # Bootloader files
+│   └── rustsbi-qemu.bin        # RustSBI bootloader for QEMU
+├── os/                         # Operating system kernel code
+│   ├── src/
+│   │   ├── main.rs            # Kernel entry point
+│   │   ├── entry.asm          # Assembly entry
+│   │   ├── linker-qemu.ld     # Linker script for QEMU
+│   │   ├── config.rs          # System configuration
+│   │   ├── console.rs         # Console output
+│   │   ├── lang_items.rs      # Rust language items (panic handler, etc.)
+│   │   ├── sbi.rs             # SBI interface
+│   │   ├── timer.rs           # Timer management
+│   │   ├── boards/            # Board-specific configurations
+│   │   ├── drivers/           # Device drivers
+│   │   │   ├── block/         # Block device drivers (virtio-blk)
+│   │   │   ├── bus/           # Bus drivers (virtio)
+│   │   │   ├── chardev/       # Character device drivers (UART)
+│   │   │   ├── gpu/           # GPU drivers
+│   │   │   ├── input/         # Input device drivers
+│   │   │   └── net/           # Network device drivers
+│   │   ├── fs/                # File system implementation
+│   │   │   ├── inode.rs       # Inode implementation
+│   │   │   ├── pipe.rs        # Pipe implementation
+│   │   │   └── stdio.rs       # Standard I/O
+│   │   ├── mm/                # Memory management
+│   │   │   ├── address.rs     # Address definitions
+│   │   │   ├── frame_allocator.rs  # Physical frame allocator
+│   │   │   ├── heap_allocator.rs   # Heap allocator
+│   │   │   ├── memory_set.rs  # Memory set management
+│   │   │   └── page_table.rs  # Page table implementation
+│   │   ├── net/               # Network stack
+│   │   │   ├── port_table.rs  # Port management
+│   │   │   ├── socket.rs      # Socket implementation
+│   │   │   ├── tcp.rs         # TCP protocol
+│   │   │   └── udp.rs         # UDP protocol
+│   │   ├── sync/              # Synchronization primitives
+│   │   │   ├── condvar.rs     # Condition variable
+│   │   │   ├── mutex.rs       # Mutex implementation
+│   │   │   ├── semaphore.rs   # Semaphore implementation
+│   │   │   └── up.rs          # Uniprocessor safe cell
+│   │   ├── syscall/           # System call implementations
+│   │   │   ├── fs.rs          # File system syscalls
+│   │   │   ├── gui.rs         # GUI syscalls
+│   │   │   ├── input.rs       # Input syscalls
+│   │   │   ├── net.rs         # Network syscalls
+│   │   │   ├── process.rs     # Process management syscalls
+│   │   │   ├── sync.rs        # Synchronization syscalls
+│   │   │   └── thread.rs      # Thread management syscalls
+│   │   ├── task/              # Task/Process management
+│   │   │   ├── context.rs     # Task context
+│   │   │   ├── id.rs          # Process/thread ID management
+│   │   │   ├── manager.rs     # Task manager
+│   │   │   ├── process.rs     # Process control block
+│   │   │   ├── processor.rs   # Processor management
+│   │   │   ├── signal.rs      # Signal handling
+│   │   │   ├── switch.rs      # Context switching
+│   │   │   └── task.rs        # Task control block
+│   │   └── trap/              # Trap handling
+│   │       ├── context.rs     # Trap context
+│   │       └── mod.rs         # Trap handler
+│   ├── Makefile               # Makefile for building OS kernel
+│   ├── Cargo.toml             # Rust package manifest
+│   └── build.rs               # Build script
+├── easy-fs/                    # Easy file system implementation
+│   └── src/
+│       ├── bitmap.rs          # Bitmap for allocation
+│       ├── block_cache.rs     # Block cache
+│       ├── block_dev.rs       # Block device trait
+│       ├── efs.rs             # Easy-FS implementation
+│       ├── layout.rs          # Disk layout
+│       ├── lib.rs             # Library entry
+│       └── vfs.rs             # Virtual file system
+├── easy-fs-fuse/              # User-space tool for creating fs image
+│   └── src/
+│       └── main.rs            # FUSE tool entry point
+├── user/                       # User-space programs
+│   ├── src/
+│   │   ├── lib.rs             # User library
+│   │   ├── console.rs         # Console I/O
+│   │   ├── syscall.rs         # System call wrappers
+│   │   ├── lang_items.rs      # Language items
+│   │   ├── linker.ld          # Linker script for user programs
+│   │   ├── file.rs            # File operations
+│   │   ├── io.rs              # I/O operations
+│   │   ├── net.rs             # Network operations
+│   │   ├── sync.rs            # Synchronization primitives
+│   │   ├── task.rs            # Task management
+│   │   └── bin/               # User applications (59 programs)
+│   ├── Makefile               # Makefile for building user programs
+│   └── Cargo.toml             # Rust package manifest
+├── .github/                    # GitHub configuration
+│   └── workflows/             # CI/CD workflows
+├── .devcontainer/             # Development container configuration
+├── .vscode/                   # VS Code settings
+├── figures/                    # Images and figures
+│   └── logo.png               # Project logo
+├── Dockerfile                 # Docker configuration
+├── Makefile                   # Top-level Makefile
+├── rust-toolchain.toml        # Rust toolchain configuration
+├── setenv.sh                  # Environment setup script
+├── ping.py                    # Network testing script
+├── dev-env-info.md           # Development environment info
+├── LICENSE                    # License file
+└── README.md                  # This file
+```
+
 ## Features
 
 * Platform supported: `qemu-system-riscv64` simulator or dev boards based on [Kendryte K210 SoC](https://canaan.io/product/kendryteai) such as [Maix Dock](https://www.seeedstudio.com/Sipeed-MAIX-Dock-p-4815.html)
